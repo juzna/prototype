@@ -404,7 +404,7 @@ Form.Methods = {
   request: function(form, options) {
     form = $(form), options = Object.clone(options || { });
 
-    var params = options.parameters, action = form.readAttribute('action') || '';
+    var params = options.parameters, action = options.url || form.readAttribute('action') || '';
     if (action.blank()) action = window.location.href;
     options.parameters = form.serialize(true);
 
