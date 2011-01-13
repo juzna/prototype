@@ -45,7 +45,7 @@ var Form = {
    *  Serialize an array of form elements to an object or string suitable
    *  for [[Ajax]] requests.
    *
-   *  As per the HTML spec, disabled fields are not included.
+   *  As per the HTML spec, disabled fields are not included (when option includeDisabled is specified, they are included)
    *
    *  If multiple elements have the same name and we're returning an object,
    *  the value for that key in the object will be an array of the field values
@@ -125,7 +125,7 @@ var Form = {
     }
     
     return elements.inject(initial, function(result, element) {
-      if (!element.disabled && element.name) {
+      if ((options.includeDisabled || !element.disabled) && element.name) {
         key = element.name; value = $(element).getValue();
         if (value != null && element.type != 'file' && (element.type != 'submit' || (!submitted &&
             submit !== false && (!submit || key == submit) && (submitted = true)))) {
