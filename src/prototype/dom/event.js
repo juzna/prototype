@@ -519,6 +519,7 @@
           return false;
 
         Event.extend(event, element);
+        if(typeof event.memo == 'undefined') event.memo = {};
         handler.call(element, event);
       };
     } else {
