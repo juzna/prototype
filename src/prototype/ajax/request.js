@@ -305,6 +305,21 @@ Ajax.Request = Class.create(Ajax.Base, {
     var state = Ajax.Request.Events[readyState], response = new Ajax.Response(this);
 
     if (state == 'Complete') {
+      // Execute pre-processors first
+      var shouldEnd = false;
+      Ajax._responsePreProcessors.each(function(cb) {
+        if(cb(this) === false) {
+          shouldEnd = true;
+          return $break;
+        }
+      }, this);
+      if(shouldEnd) {
+        // avoid memory leak in MSIE: clean up
+        this.transport.onreadystatechange = Prototype.emptyFunction;
+
+        return;
+      }
+
       try {
         this._complete = true;
         (this.options['on' + response.status]

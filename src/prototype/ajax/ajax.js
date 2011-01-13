@@ -44,5 +44,14 @@ var Ajax = {
 
   getHeaderCreators: function() {
     return Ajax._headerCreators;
+  },
+
+  /**
+   * List of pre-processors which will be executed on received ajax responses. It may change them
+   */
+  _responsePreProcessors: [],
+
+  addResponsePreProcessor: function(cb) {
+    Ajax._responsePreProcessors.push(cb);
   }
 };
