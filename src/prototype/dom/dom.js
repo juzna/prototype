@@ -3638,5 +3638,40 @@ Element.addMethods({
     while (i--) purgeElement(descendants[i]);
 
     return null;
+  },
+
+  /**
+   * Element.load(@element, url, [options]) -> Ajax.Request
+   *
+   * More convenient way to call Ajax.Updater
+   *
+   * Example:
+   *  $('news').load('news.html');
+   */
+  load: function(element, url, options) {
+    return new Ajax.Updater(element, url, options);
+  },
+
+  /**
+   * Append more children at once
+   * See appendChild
+   *
+   * Example:
+   * $('news').appendChildren(div1, div2, div3)
+   */
+  appendChildren: function(element) {
+  	var args = $A(arguments);
+    args.shift(); // Skip first argument
+    
+    for(var i = 0; i < args.length; i++) element.appendChild(args[i]);
+    return element;
+  },
+
+  /**
+   * Checks if element is in document's body (otherwise it could be already removed from DOM but we have reference to it)
+  **/
+  inBody: function(el) {
+    while(el && el.parentElement) el = el.parentElement;
+    return (el && el.tagName == 'HTML');
   }
 });
