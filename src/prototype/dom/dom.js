@@ -3675,3 +3675,50 @@ Element.addMethods({
     return (el && el.tagName == 'HTML');
   }
 });
+
+
+// On-ready callbacks on document
+(function() {
+  // List of live handlers
+  var onLiveHandlers = [];
+
+  // Execute all registered live handlers
+  function executeLiveHandlers(container) {
+    onLiveHandlers.each(function(item) {
+      item.callback(container)
+    })
+  }
+
+  // Add new live handler
+  function addLiveHandler(name, cb) {
+    if(Object.isFunction(name)) {
+      cb = name;
+      name = 'anonymous-' + document.onLiveHandlers.length;
+    }
+
+    // Add on-live handler
+    onLiveHandlers.push({
+      name: name,
+      callback: cb
+    });
+
+    return name;
+  }
+
+  // Execute callback when document get's ready
+  function onReady(cb) {
+    if(document.ready) cb.defer();
+    else Element.observe(document, 'load', cb);
+  }
+
+  // Wait for document to be ready
+  Element.observe(document, 'load', function() {
+    document.ready = true;
+    executeLiveHandlers(document.body);
+  });
+
+
+  // Export methods
+  document.onReady = onReady;
+  document.onLive = addLiveHandler;
+})();
