@@ -26,5 +26,23 @@ var Ajax = {
     'X-Requested-With': 'XMLHttpRequest',
     'X-Prototype-Version': Prototype.Version,
     'Accept': 'text/javascript, text/html, application/xml, text/xml, */*'
+  },
+
+  /**
+   * List of callback which are used to create misc headers
+   */
+  _headerCreators: [],
+
+  /**
+   * Ajax.addHeaderCreator( fn(request) -> {} )
+   *
+   * Add new header creator, which is caller for every new request to create additional headers
+   */
+  addHeaderCreator: function(cb) {
+    Ajax._headerCreators.push(cb);
+  },
+
+  getHeaderCreators: function() {
+    return Ajax._headerCreators;
   }
 };

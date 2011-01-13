@@ -249,6 +249,12 @@ Ajax.Request = Class.create(Ajax.Base, {
   setRequestHeaders: function() {
     var headers = Object.clone(Ajax.headers);
 
+    // Call header creators
+    Ajax.getHeaderCreators().each(function(cb) {
+      var additionalHeaders = cb(this);
+      if(additionalHeaders) Object.extend(headers, additionalHeaders);
+    }, this);
+
     if (this.method == 'post') {
       headers['Content-type'] = this.options.contentType +
         (this.options.encoding ? '; charset=' + this.options.encoding : '');
