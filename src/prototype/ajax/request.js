@@ -230,11 +230,7 @@ Ajax.Request = Class.create(Ajax.Base, {
   },
 
   setRequestHeaders: function() {
-    var headers = {
-      'X-Requested-With': 'XMLHttpRequest',
-      'X-Prototype-Version': Prototype.Version,
-      'Accept': 'text/javascript, text/html, application/xml, text/xml, */*'
-    };
+    var headers = Object.clone(Ajax.headers);
 
     if (this.method == 'post') {
       headers['Content-type'] = this.options.contentType +

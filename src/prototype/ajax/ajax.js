@@ -17,5 +17,14 @@ var Ajax = {
    *  Represents the number of active XHR requests triggered through
    *  [[Ajax.Request]], [[Ajax.Updater]], or [[Ajax.PeriodicalUpdater]].
   **/
-  activeRequestCount: 0
+  activeRequestCount: 0,
+
+  /**
+   * Default headers for requests (let application modify them)
+   */
+  headers: {
+    'X-Requested-With': 'XMLHttpRequest',
+    'X-Prototype-Version': Prototype.Version,
+    'Accept': 'text/javascript, text/html, application/xml, text/xml, */*'
+  }
 };
