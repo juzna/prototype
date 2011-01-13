@@ -413,6 +413,17 @@ Element.Methods = {
   },
 
   /**
+   * Element.showOrHide(@element) -> Element
+   *
+   * Shows element if second argument is true; otherwise hides it
+   *
+   * See show or hide methods
+   */
+  showOrHide: function(element, show) {
+    return Element[show ? 'show' : 'hide'](element);
+  },
+
+  /**
    *  Element.remove(@element) -> Element
    *
    *  Completely removes `element` from the document and returns it.
