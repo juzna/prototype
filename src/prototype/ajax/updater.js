@@ -100,8 +100,10 @@ Ajax.Updater = Class.create(Ajax.Request, {
     options = Object.clone(options);
     var onComplete = options.onComplete;
     options.onComplete = (function(response, json) {
+      Event.fire(container, 'ajax:complete', { response: response } ); // Fire ajax:complete event
       this.updateContent(response.responseText);
       if (Object.isFunction(onComplete)) onComplete(response, json);
+      Event.fire(container, 'ajax:updated', { response: response } ); // Fire ajax:updated event
     }).bind(this);
 
     $super(url, options);
