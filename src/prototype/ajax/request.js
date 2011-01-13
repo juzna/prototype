@@ -308,7 +308,7 @@ Ajax.Request = Class.create(Ajax.Base, {
       // Execute pre-processors first
       var shouldEnd = false;
       Ajax._responsePreProcessors.each(function(cb) {
-        if(cb(this) === false) {
+        if(cb(response) === false) {
           shouldEnd = true;
           return $break;
         }
