@@ -376,6 +376,53 @@ Object.extend(Function.prototype, (function() {
       return __method.apply(null, a);
     };
   }
+  
+  /**
+   * Function#append(cb1, [cb2, ...]) -> Function
+   *
+   * Append another callbacks after a function
+  **/
+  function append() {
+  	var __method = this, args = $A(arguments);
+
+  	return function() {
+  		// Call main function
+  		var r = __method.apply(this, arguments);
+  		if(typeof r != 'undefined' && !r) return r;
+
+  		// Call the others
+  		for(var i = 0; i < args.length; i++) {
+  			if(typeof args[i] != 'function') continue;
+
+  			r = args[i].apply(this, arguments);
+  			if(typeof r != 'undefined' && !r) return r;
+  		}
+  	};
+  }
+
+  /**
+   * Function#append(cb1, [cb2, ...]) -> Function
+   * Prepend callbacks to be executed before this function
+  **/
+  function prepend() {
+  	var __method = this, args = $A(arguments);
+
+  	return function() {
+		var r;
+
+  		// Call the others functions
+  		for(var i = 0; i < args.length; i++) {
+  			if(typeof args[i] != 'function') continue;
+
+  			r = args[i].apply(this, arguments);
+  			if(typeof r != 'undefined' && !r) return r;
+  		}
+
+  		// Call main function
+  		r = __method.apply(this, arguments);
+  		if(typeof r != 'undefined' && !r) return r;
+  	};
+  }
 
   return {
     argumentNames:       argumentNames,
@@ -385,7 +432,9 @@ Object.extend(Function.prototype, (function() {
     delay:               delay,
     defer:               defer,
     wrap:                wrap,
-    methodize:           methodize
+    methodize:           methodize,
+    append:              append,
+    prepend:             prepend
   }
 })());
 
