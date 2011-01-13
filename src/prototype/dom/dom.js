@@ -801,7 +801,7 @@ Element.Methods = {
    *        after: "<hr>"
    *      });
   **/
-  insert: function(element, insertions) {
+  insert: function(element, insertions, scope) {
     element = $(element);
 
     if (Object.isString(insertions) || Object.isNumber(insertions) ||
@@ -831,7 +831,7 @@ Element.Methods = {
       if (position == 'top' || position == 'after') childNodes.reverse();
       childNodes.each(insert.curry(element));
 
-      content.evalScripts.bind(content, element).defer();
+      String.prototype.evalScripts.cal(content, element, scope);
     }
 
     return element;

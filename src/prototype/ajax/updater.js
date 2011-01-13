@@ -116,14 +116,21 @@ Ajax.Updater = Class.create(Ajax.Request, {
     if (!options.evalScripts) responseText = responseText.stripScripts();
 
     if (receiver = $(receiver)) {
+	    // Get scope
+	    var _scope;
+	    try {
+		    _scope = this.options.scope || window.Scope && Scope.get(receiver, this.options.scopeName);
+		    if(_scope) _scope._el = receiver;
+	    } catch(e) {}
+
       if (options.insertion) {
         if (Object.isString(options.insertion)) {
           var insertion = { }; insertion[options.insertion] = responseText;
-          receiver.insert(insertion);
+          receiver.insert(insertion, _scope);
         }
         else options.insertion(receiver, responseText);
       }
-      else receiver.update(responseText);
+      else receiver.update(responseText, _scope);
     }
   }
 });
