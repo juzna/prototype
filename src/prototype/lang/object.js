@@ -74,6 +74,17 @@
       destination[property] = source[property];
     return destination;
   }
+  
+  /**
+   * Recursive version of Object.extend
+  **/
+  function extendRecursive(destination, source) {
+    for (var property in source) {
+      if(typeof destination[property] == 'object' && destination[property] && typeof source[property] == 'object') extendRecursive(destination[property], source[property]);
+      else destination[property] = source[property];
+    }
+    return destination;
+  };
 
   /**
    *  Object.inspect(obj) -> String
@@ -383,6 +394,14 @@
   }
 
   /**
+   *  Object.clone(object) -> Object
+   * Deep cloning of an object
+  **/
+  function cloneDeep(object) {
+    return JSON.parse(JSON.stringify(object));
+  }
+
+  /**
    *  Object.isElement(object) -> Boolean
    *  - object (Object): The object to test.
    *
@@ -564,8 +583,16 @@
     return typeof object === "undefined";
   }
 
+  /**
+   * Get object's class name, or undefined when not class instance
+   */
+  function className(object) {
+    if(typeof object == 'object') return object.constructor.name;
+  }
+
   extend(Object, {
     extend:        extend,
+    extendRecutsive: extendRecursive,
     inspect:       inspect,
     toJSON:        NATIVE_JSON_STRINGIFY_SUPPORT ? stringify : toJSON,
     toQueryString: toQueryString,
@@ -573,6 +600,7 @@
     keys:          Object.keys || keys,
     values:        values,
     clone:         clone,
+    cloneDeep:     cloneDeep,
     isElement:     isElement,
     isArray:       isArray,
     isHash:        isHash,
@@ -580,6 +608,7 @@
     isString:      isString,
     isNumber:      isNumber,
     isDate:        isDate,
-    isUndefined:   isUndefined
+    isUndefined:   isUndefined,
+    className:     className
   });
 })();
