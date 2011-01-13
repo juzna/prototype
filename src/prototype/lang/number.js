@@ -145,6 +145,24 @@ Object.extend(Number.prototype, (function() {
     return Math.floor(this);
   }
 
+  /**
+   *  Number#floor() -> Number
+   *
+   * Fit number to boundaries
+   *
+   * Example:
+   *   5.fit(1,10)  -> 5
+   *   20.fit(1,10) -> 10
+  **/
+  function fit(min, max) {
+    if(min >= max) return this;
+    else {
+      if(this > max) return max;
+      else if(this < min) return min;
+      else return this;
+    }
+  }
+
   return {
     toColorPart:    toColorPart,
     succ:           succ,
@@ -153,6 +171,7 @@ Object.extend(Number.prototype, (function() {
     abs:            abs,
     round:          round,
     ceil:           ceil,
-    floor:          floor
+    floor:          floor,
+    fit:            fit
   };
 })());
