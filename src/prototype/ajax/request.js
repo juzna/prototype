@@ -176,14 +176,24 @@ Ajax.Request = Class.create(Ajax.Base, {
     this.request(url);
   },
 
+  /**
+   * Convert parameters in various formats to string format
+   * @param mixed params
+   * @return string
+  **/
+  getParametersString: function(params) {
+    if(Object.isFunction(params)) params = params(this); // Parameters given as callback
+    else if(Object.isFunction(params.toObject)) params = params.toObject(params, this); // Explicit convertor for parameters
+    if(!Object.isString(params)) params = Object.toQueryString(params);
+
+    return params;
+  },
+
   request: function(url) {
     this.timeStart = (new Date).getTime(); // Measure time of requests
     this.url = url.replace(/#.*/, '');
     this.method = this.options.method;
-    var params = this.options.parameters;
-    if(Object.isFunction(params)) params = params(this); // Parameters given as callback
-    else if(Object.isFunction(params.toObject)) params = params.toObject(params, this); // Explicit convertor for parameters
-    if(!Object.isString(params)) params = Object.toQueryString(params);
+    var params = this.getParametersString(this.options.parameters);
 
     if (!['get', 'post'].include(this.method)) {
       // simulate other verbs over post
@@ -194,6 +204,12 @@ Ajax.Request = Class.create(Ajax.Base, {
     if (params && this.method === 'get') {
       // when GET, append parameters to URL
       this.url += (this.url.include('?') ? '&' : '?') + params;
+    }
+
+    // Explicit parameters to be sent via GET
+    if (this.options.parametersGet) {
+      var params2 = this.getParametersString(this.options.parametersGet);
+      if(params2) this.url += (this.url.include('?') ? '&' : '?') + params2;
     }
 
     this.parameters = params.toQueryParams();
