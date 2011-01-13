@@ -177,6 +177,7 @@ Ajax.Request = Class.create(Ajax.Base, {
   },
 
   request: function(url) {
+    this.timeStart = (new Date).getTime(); // Measure time of requests
     this.url = url;
     this.method = this.options.method;
     var params = Object.isString(this.options.parameters) ?

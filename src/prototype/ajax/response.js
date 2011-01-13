@@ -65,6 +65,7 @@ Ajax.Response = Class.create({
   // Don't document the constructor; should never be manually instantiated.
   initialize: function(request){
     this.request = request;
+    this.time = (new Date).getTime() - this.request.timeStart; // Measure time consumed
     var transport  = this.transport  = request.transport,
         readyState = this.readyState = transport.readyState;
 
