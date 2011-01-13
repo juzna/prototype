@@ -610,7 +610,7 @@ Element.Methods = {
     })();
     
 
-    function update(element, content) {
+    function update(element, content, scope) {
       element = $(element);
       var purgeElement = Element._purgeElement;
       
@@ -665,7 +665,7 @@ Element.Methods = {
         element.innerHTML = content.stripScripts();
       }
 
-      content.evalScripts.bind(content).defer();
+      String.prototype.evalScripts.call(content, element, scope);
       return element;
     }
 
@@ -749,7 +749,7 @@ Element.Methods = {
       content = Object.toHTML(content);
       var range = element.ownerDocument.createRange();
       range.selectNode(element);
-      content.evalScripts.bind(content).defer();
+      content.evalScripts.bind(content, element).defer();
       content = range.createContextualFragment(content.stripScripts());
     }
     element.parentNode.replaceChild(content, element);
@@ -831,7 +831,7 @@ Element.Methods = {
       if (position == 'top' || position == 'after') childNodes.reverse();
       childNodes.each(insert.curry(element));
 
-      content.evalScripts.bind(content).defer();
+      content.evalScripts.bind(content, element).defer();
     }
 
     return element;
@@ -2991,7 +2991,7 @@ if ('outerHTML' in document.documentElement) {
     }
     else element.outerHTML = content.stripScripts();
 
-    content.evalScripts.bind(content).defer();
+    content.evalScripts.bind(content, element).defer();
     return element;
   };
 }
