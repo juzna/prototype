@@ -850,6 +850,64 @@ Object.extend(String.prototype, (function() {
   function interpolate(object, pattern) {
     return new Template(this, pattern).evaluate(object);
   }
+  
+  /**
+   * String#padStart(len, [char]) -> String
+   *
+   * Adds padding to beginning of string to make length equal to len
+   *
+   * Example:
+   *  "hello".padStart(10) -> "     hello"
+  **/
+  function padStart(len, char) {
+  	char = char || ' ';
+
+  	var remain = len - this.length;
+  	if(remain <= 0) return this;
+
+  	var s = '';
+  	while(remain > 0) {
+  		s += char;
+  		remain -= char.length;
+  	}
+  	return s.substr(0, len - this.length) + this;
+  }
+  
+  /**
+   * String#isIdent() -> bool
+   *
+   * Check if this string is identifier, i.e. it can be used as property or object ID
+   */
+  function isIdent() {
+    return this.match(/^[$a-z0-9_]+$/i) ? true : false;
+  }
+  
+  /**
+   * String#colorize(string, [color]) -> String
+   *
+   * Search for pattern in HTML string and replace it by colored string
+   *
+   * Example:
+   *  "hello world, it's nice day".colorize('world')
+  **/
+  function colorize(pattern, color) {
+    color = color || 'red';
+    
+    if(!pattern || pattern.blank()) return false;
+
+    var re = new RegExp('(^|\\s+)' + pattern, 'i');
+    if(!this.match(re)) return false; // Not found
+
+    var ret = this;
+
+    // Replace all occurrences
+    var parts = this.match(new RegExp('(^|\\s+)' + pattern, 'ig'));
+    for(var i = 0; i < parts.length; i++) {
+	    ret = ret.replace(parts[i], '<font color="' + color + '">' + parts[i] + '</font>');
+    }
+
+    return ret;
+  }
 
   return {
     gsub:           gsub,
@@ -883,7 +941,11 @@ Object.extend(String.prototype, (function() {
     endsWith:       endsWith,
     empty:          empty,
     blank:          blank,
-    interpolate:    interpolate
+    interpolate:    interpolate,
+    padStart:	      padStart,
+    isIdent:	      isIdent,
+    colorize:	      colorize,
+    searchRed:	    colorize
   };
 })());
 
