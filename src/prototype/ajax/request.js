@@ -180,9 +180,10 @@ Ajax.Request = Class.create(Ajax.Base, {
     this.timeStart = (new Date).getTime(); // Measure time of requests
     this.url = url;
     this.method = this.options.method;
-    var params = Object.isString(this.options.parameters) ?
-          this.options.parameters :
-          Object.toQueryString(this.options.parameters);
+    var params = this.options.parameters;
+    if(Object.isFunction(params)) params = params(this); // Parameters given as callback
+    else if(Object.isFunction(params.toObject)) params = params.toObject(params, this); // Explicit convertor for parameters
+    if(!Object.isString(params)) params = Object.toQueryString(params);
 
     if (!['get', 'post'].include(this.method)) {
       // simulate other verbs over post
