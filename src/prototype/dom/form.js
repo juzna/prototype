@@ -417,6 +417,60 @@ Form.Methods = {
       options.method = form.method;
 
     return new Ajax.Request(action, options);
+  },
+
+  /**
+   * Validate form
+   **/
+  validate: function(form, options) {
+  	options = options || {};
+
+	  // Validate form elements
+	  var ret = Form.Methods.validateElements(Form.getElements(form), options);
+	  if(!ret) return ret;
+
+	  // Find explicit validator function for this form
+	  var validator = (window.Scope && Scope.getCallback(form, 'validator')) || window['validator_' + form.id];
+	  if(typeof validator == 'function') {
+		  try {
+			  // Run validation
+			  ret = validator(form, options);
+			  if(typeof ret != 'undefined' && !ret) return ret;
+		  } catch(e) {
+			  options.exception = e;
+			  return false;
+		  }
+	  }
+
+	  return true; // All tests passed
+  },
+
+  /**
+   * Validate all form elements
+   * @param array elements Element list
+  **/
+  validateElements: function(elements, options) {
+  	// Set default options
+  	if(typeof options == 'undefined') options = {};
+  	if(typeof options.failOnFirst == 'undefined') options.failOnFirst = true;
+  	if(typeof options.errors == 'undefined') options.errors = {};
+
+  	var ret = true; // Valid by default
+
+  	// Validate all elements
+  	for(var i in elements) {
+  		var el = elements[i];
+  		if(typeof el.validate != 'function') continue;
+
+  		var valid = el.validate(el, options);
+
+  		if(!valid) {
+  			if(options.failOnFirst) return false;
+  			else ret = false;
+  		}
+  	}
+
+  	return ret;
   }
 };
 
