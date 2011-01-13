@@ -338,7 +338,7 @@ Object.extend(String.prototype, (function() {
   }
 
   /**
-   *  String#evalScripts() -> Array
+   *  String#evalScripts([ container, [ scope, ... ]]) -> Array
    *
    *  Evaluates the content of any inline `<script>` block present in the string.
    *  Returns an array containing the value returned by each script.
@@ -386,7 +386,13 @@ Object.extend(String.prototype, (function() {
    *  an array containing the value returned by each script.
   **/
   function evalScripts() {
-    return this.extractScripts().map(function(script) { return eval(script) });
+    var _args = $A(arguments); // Arguments for eval scripts
+    return this.extractScripts().map(function(script) {
+      // Get scope and element, or create implicit scope
+      var _container = _args[0], _scope = _args[1];
+      if(_container && (typeof _scope == 'undefined') && typeof window.Scope != 'undefined' && script.match(/_scope/)) _scope = Scope.get(_container);
+      return eval(script);
+    });
   }
 
   /** related to: String#unescapeHTML
