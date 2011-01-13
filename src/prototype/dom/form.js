@@ -406,7 +406,7 @@ Form.Methods = {
 
     var params = options.parameters, action = options.url || form.readAttribute('action') || '';
     if (action.blank()) action = window.location.href;
-    options.parameters = form.serialize(true);
+    options.parameters = form.serialize({ hash: true, includeDisabled: options.sendDisabled || form.sendDisabled || form.getAttribute('sendDisabled') } );
 
     if (params) {
       if (Object.isString(params)) params = params.toQueryParams();
